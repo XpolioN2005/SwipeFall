@@ -1,29 +1,50 @@
 name: Release
 
+permissions:
+  contents: write
+
 env:
-  GODOT_VERSION: 4.4.1
+  GODOT_VERSION: 4.6.2
 
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (e.g. v1.0.0)"
+        required: true
+        default: "v1.0.0"
 
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           lfs: true
 
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Accept Android licenses
+        run: yes | sdkmanager --licenses
+
       - name: Build game
         id: build
         uses: firebelley/godot-export@v5.2.1
         with:
           godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip
+
           godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz
-          relative_project_path: ./src
+
+          relative_project_path: .
           use_preset_export_path: true
           archive_output: true
 
@@ -38,23 +59,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           generateReleaseNotes: true
-          tag: ${{ github.ref_name }}
+          tag: ${{ github.event.inputs.version }}
           artifacts: ${{ steps.build.outputs.archive_directory }}/**/*.zip
           allowUpdates: true
-  
-      - name: Make get_butler.sh executable
-        run: chmod +x ./get_butler.sh  
-
-      - name: Deploy to itch.io
-        run: |
-          ./get_butler.sh
-          BUTLER_API_KEY=${{ secrets.BUTLER_API_KEY }} ./butler --verbose push \
-            "${{ steps.build.outputs.build_directory }}/web_release" \
-            "${{ vars.ITCHIO_USERNAME }}/${{ vars.ITCHIO_GAME }}:web"
-
-      - name: Send Discord notification
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASE_WEBHOOK }}
-        uses: Ilshidur/action-discord@master
-        with:
-          args: '${{ vars.GAME_NAME }} ${{ github.ref_name }} released: https://${{ vars.ITCHIO_USERNAME }}.itch.io/${{ vars.ITCHIO_GAME }} Password: 100devs'
