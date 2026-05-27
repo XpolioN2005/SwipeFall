@@ -1,3 +1,9 @@
 [gd_scene format=3 uid="uid://b6vf1aji6dy38"]
 
+[ext_resource type="Script" uid="uid://bus462c6ybdxw" path="res://Utils/gesture_recognizer.gd" id="1_37kl0"]
+
 [node name="test" type="Node3D" unique_id=1687696117]
+
+[node name="GestureRecognizer" type="Node" parent="." unique_id=1135233729]
+script = ExtResource("1_37kl0")
+metadata/_custom_type_script = "uid://bus462c6ybdxw"
