@@ -49,10 +49,7 @@ func _on_touch_pressed(event: InputEventScreenTouch) -> void:
 
 	touches[finger] = TouchData.new(event.position, _get_time())
 
-	print(
-		"Finger %d TOUCH at %s"
-		% [finger, event.position]
-	)
+	SignalBus.touch_pressed.emit(finger, event.position)
 
 
 func _on_touch_released(event: InputEventScreenTouch) -> void:
@@ -68,22 +65,15 @@ func _on_touch_released(event: InputEventScreenTouch) -> void:
 	var distance: float = data.start_position.distance_to(event.position)
 
 	if data.dragging:
-		print(
-			"Finger %d DRAG RELEASE at %s"
-			% [finger, event.position]
-		)
+		SignalBus.drag_ended.emit(finger, event.position)
 
 	elif data.hold_triggered:
-		print(
-			"Finger %d HOLD RELEASE at %s | Held %.2fs"
-			% [finger, event.position, elapsed]
-		)
+		SignalBus.hold_released.emit(finger, event.position, elapsed)
 
 	elif _is_tap(elapsed, distance):
-		print(
-			"Finger %d TAP at %s"
-			% [finger, event.position]
-		)
+		SignalBus.tap.emit(finger, event.position)
+
+	SignalBus.touch_released.emit(finger, event.position)
 
 	touches.erase(finger)
 
@@ -108,10 +98,7 @@ func _handle_drag(event: InputEventScreenDrag) -> void:
 	if data.dragging:
 		var delta: Vector2 = (event.position - previous_position)
 
-		print(
-			"Finger %d DRAGGING | Pos: %s | Delta: %s"
-			% [finger, event.position, delta]
-		)
+		SignalBus.dragging.emit(finger, event.position, delta)
 
 
 func _try_start_drag(finger: int, data: TouchData, moved_distance: float) -> void:
@@ -126,10 +113,7 @@ func _try_start_drag(finger: int, data: TouchData, moved_distance: float) -> voi
 
 	data.dragging = true
 
-	print(
-		"Finger %d DRAG START at %s"
-		% [finger, data.start_position]
-	)
+	SignalBus.drag_started.emit(finger, data.start_position)
 
 
 # HOLD
@@ -142,10 +126,7 @@ func _check_holds() -> void:
 		if _can_trigger_hold(data, current_time):
 			data.hold_triggered = true
 
-			print(
-				"Finger %d HOLD at %s"
-				% [finger, data.current_position]
-			)
+			SignalBus.hold.emit(finger, data.current_position)
 
 
 func _can_trigger_hold(data: TouchData, current_time: float) -> bool:
