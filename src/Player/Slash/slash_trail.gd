@@ -9,6 +9,7 @@ class_name SlashTrail
 @export var decay_rate: float = 0.01
 
 const MAX_POINTS: int = 200
+var is_active: bool = true
 
 @onready var curve: Curve2D = Curve2D.new()
 
@@ -18,12 +19,17 @@ func _ready() -> void:
 	line.clear_points()
 
 	SignalBus.dragging.connect(_on_dragging)
+	SignalBus.drag_ended.connect(_on_drag_ended)
+
 	_start_lifetime()
 
 
 func _exit_tree() -> void:
 	if SignalBus.dragging.is_connected(_on_dragging):
 		SignalBus.dragging.disconnect(_on_dragging)
+	
+	if SignalBus.drag_ended.is_connected(_on_drag_ended):
+		SignalBus.drag_ended.disconnect(_on_drag_ended)
 
 
 func _start_lifetime() -> void:
@@ -31,8 +37,13 @@ func _start_lifetime() -> void:
 
 	_decay()
 
+func _on_drag_ended(_finger: int, _position: Vector2) -> void:
+	is_active = false
 
 func _on_dragging(_finger: int, pos: Vector2, _delta: Vector2) -> void:
+	if not is_active:
+		return
+
 	var local_pos: Vector2 = to_local(pos)
 
 	if curve.point_count == 0:

@@ -17,6 +17,7 @@ radius = 20.0
 script = ExtResource("1_edoks")
 line = NodePath("Line2D")
 area = NodePath("Area2D")
+point_distance_threshold = 5.0
 lifetime = 0.5
 
 [node name="Line2D" type="Line2D" parent="." unique_id=290758603]
