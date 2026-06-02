@@ -11,6 +11,9 @@ class_name SlashTrail
 const MAX_POINTS: int = 200
 
 var is_active: bool = true
+var decay_running: bool = false
+
+var raycasts_this_second: int = 0
 
 @onready var curve: Curve2D = Curve2D.new()
 
@@ -27,6 +30,7 @@ func _ready() -> void:
 	SignalBus.drag_ended.connect(_on_drag_ended)
 
 	_start_lifetime()
+	_start_raycast_counter()
 
 
 func _exit_tree() -> void:
@@ -35,6 +39,13 @@ func _exit_tree() -> void:
 
 	if SignalBus.drag_ended.is_connected(_on_drag_ended):
 		SignalBus.drag_ended.disconnect(_on_drag_ended)
+
+
+func _start_raycast_counter() -> void:
+	while is_inside_tree():
+		await get_tree().create_timer(1.0).timeout
+		print("Raycasts/sec: ", raycasts_this_second)
+		raycasts_this_second = 0
 
 
 func _start_lifetime() -> void:
@@ -53,19 +64,21 @@ func _on_dragging(_finger: int, pos: Vector2, _delta: Vector2) -> void:
 
 	var local_pos: Vector2 = to_local(pos)
 
+	area.position = local_pos
+
 	if curve.point_count > 0:
 		var last_point: Vector2 = curve.get_point_position(curve.point_count - 1)
 
 		if last_point.distance_to(local_pos) < point_distance_threshold:
 			return
 
-	area.position = local_pos
+	curve.add_point(local_pos)
+	# print("added point")
 
 	if player_cam:
 		var hit: Node3D = player_cam.raycast_from_screen(pos)
-		print(hit)
-
-	curve.add_point(local_pos)
+		raycasts_this_second += 1
+		# print(hit)
 
 	if curve.point_count > MAX_POINTS:
 		curve.remove_point(0)
@@ -78,10 +91,17 @@ func _update_line() -> void:
 
 
 func _decay() -> void:
-	while curve.point_count > 0:
-		curve.remove_point(0)
-		_update_line()
+	decay_running = true
+
+	while true:
+		if curve.point_count > 0:
+			curve.remove_point(0)
+			_update_line()
+
+		if curve.point_count == 0 and not is_active:
+			break
 
 		await get_tree().create_timer(decay_rate).timeout
 
+	decay_running = false
 	queue_free()
