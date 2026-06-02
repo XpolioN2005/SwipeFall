@@ -1,9 +1,9 @@
-[gd_scene format=3 uid="uid://cs8vdam2pq2ft"]
+[gd_scene format=3 uid="uid://sjsl72bueesm"]
 
-[ext_resource type="Script" uid="uid://bcxqfyw550dyv" path="res://Player/Slash/slash_trail.gd" id="1_edoks"]
+[ext_resource type="Script" uid="uid://bcxqfyw550dyv" path="res://Player/Slash/slash.gd" id="1_q1r0c"]
 
 [sub_resource type="Curve" id="Curve_l8h54"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.59999996, 0.50561804), 1.6743774, 1.6743774, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+_data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.5, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -2.0, 0.0, 1, 0]
 point_count = 3
 
 [sub_resource type="SphereMesh" id="SphereMesh_l8h54"]
@@ -13,11 +13,11 @@ height = 40.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_l8h54"]
 radius = 20.0
 
-[node name="slash_trail" type="Node2D" unique_id=562439126 node_paths=PackedStringArray("line", "area")]
-script = ExtResource("1_edoks")
+[node name="slash" type="Node2D" unique_id=562439126 node_paths=PackedStringArray("line", "area")]
+script = ExtResource("1_q1r0c")
 line = NodePath("Line2D")
 area = NodePath("Area2D")
-point_distance_threshold = 5.0
+point_distance_threshold = 2.0
 lifetime = 0.5
 
 [node name="Line2D" type="Line2D" parent="." unique_id=290758603]
@@ -30,6 +30,7 @@ antialiased = true
 [node name="Area2D" type="Area2D" parent="." unique_id=649688203]
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Area2D" unique_id=342628107]
+visible = false
 mesh = SubResource("SphereMesh_l8h54")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1424058888]
