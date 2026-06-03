@@ -1,5 +1,5 @@
 extends Node2D
-class_name SlashTrail
+class_name PlayerAtk
 
 @export var line: Line2D
 @export var area: Area2D
@@ -8,12 +8,13 @@ class_name SlashTrail
 @export var lifetime: float = 1.0
 @export var decay_rate: float = 0.01
 
+var is_slash: bool = false
+var finger_id: int
+
 const MAX_POINTS: int = 200
 
-var is_active: bool = true
+var drag_ended: bool = false
 var decay_running: bool = false
-
-var raycasts_this_second: int = 0
 
 @onready var curve: Curve2D = Curve2D.new()
 
@@ -26,11 +27,13 @@ func _ready() -> void:
 
 	player_cam = get_viewport().get_camera_3d() as PlayerCam
 
-	SignalBus.dragging.connect(_on_dragging)
-	SignalBus.drag_ended.connect(_on_drag_ended)
+	_raycast(global_position)
+	
+	if is_slash:
+		SignalBus.dragging.connect(_on_dragging)
+		SignalBus.drag_ended.connect(_on_drag_ended)
 
 	_start_lifetime()
-	_start_raycast_counter()
 
 
 func _exit_tree() -> void:
@@ -41,25 +44,27 @@ func _exit_tree() -> void:
 		SignalBus.drag_ended.disconnect(_on_drag_ended)
 
 
-func _start_raycast_counter() -> void:
-	while is_inside_tree():
-		await get_tree().create_timer(1.0).timeout
-		print("Raycasts/sec: ", raycasts_this_second)
-		raycasts_this_second = 0
-
-
 func _start_lifetime() -> void:
 	await get_tree().create_timer(lifetime).timeout
 
-	_decay()
+	if not is_slash:
+		drag_ended = true
+
+	if not decay_running:
+		_decay()
 
 
-func _on_drag_ended(_finger: int, _position: Vector2) -> void:
-	is_active = false
+func _on_drag_ended(finger: int, _position: Vector2) -> void:
+	if finger_id != finger:
+		return
+	drag_ended = true
 
 
-func _on_dragging(_finger: int, pos: Vector2, _delta: Vector2) -> void:
-	if not is_active:
+func _on_dragging(finger: int, pos: Vector2, _delta: Vector2) -> void:
+	if finger_id != finger:
+		return
+		
+	if drag_ended:
 		return
 
 	var local_pos: Vector2 = to_local(pos)
@@ -75,10 +80,7 @@ func _on_dragging(_finger: int, pos: Vector2, _delta: Vector2) -> void:
 	curve.add_point(local_pos)
 	# print("added point")
 
-	if player_cam:
-		var hit: Node3D = player_cam.raycast_from_screen(pos)
-		raycasts_this_second += 1
-		# print(hit)
+	_raycast(pos)
 
 	if curve.point_count > MAX_POINTS:
 		curve.remove_point(0)
@@ -98,10 +100,15 @@ func _decay() -> void:
 			curve.remove_point(0)
 			_update_line()
 
-		if curve.point_count == 0 and not is_active:
+		if curve.point_count == 0 and drag_ended:
 			break
 
 		await get_tree().create_timer(decay_rate).timeout
 
 	decay_running = false
 	queue_free()
+
+func _raycast(pos: Vector2) -> void:
+	if player_cam:
+		var hit: Node3D = player_cam.raycast_from_screen(pos)
+		print(hit)
