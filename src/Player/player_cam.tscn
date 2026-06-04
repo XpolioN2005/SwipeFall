@@ -1,9 +1,13 @@
 [gd_scene format=3 uid="uid://byque4w54oowj"]
 
 [ext_resource type="Script" uid="uid://bg3c1fary1akj" path="res://Player/player_cam.gd" id="1_l8h54"]
+[ext_resource type="PackedScene" uid="uid://l5evyrdc7ecn" path="res://assets/prototype.glb" id="2_p1gte"]
 
 [node name="Player" type="Camera3D" unique_id=310939546 node_paths=PackedStringArray("canvas")]
 script = ExtResource("1_l8h54")
 canvas = NodePath("Visuals")
 
 [node name="Visuals" type="CanvasLayer" parent="." unique_id=1745295260]
+
+[node name="prototype" parent="." unique_id=1545622841 instance=ExtResource("2_p1gte")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0676591, -1.1920929e-07, -1.8315158)
