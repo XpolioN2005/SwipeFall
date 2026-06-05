@@ -2,21 +2,18 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://q177bvy7ak5g"
-path.s3tc="res://.godot/imported/prototype_maria_diffuse.png-1c822916625113be47e09e9ea18b9131.s3tc.ctex"
-path.etc2="res://.godot/imported/prototype_maria_diffuse.png-1c822916625113be47e09e9ea18b9131.etc2.ctex"
+uid="uid://co4ha2k7f42ln"
+path.s3tc="res://.godot/imported/maria_diffuse.png-e5d187d313aaacd741c993ba7132f7ef.s3tc.ctex"
+path.etc2="res://.godot/imported/maria_diffuse.png-e5d187d313aaacd741c993ba7132f7ef.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
-generator_parameters={
-"md5": "7c4cf874960de1199e93a09cfd5bdae3"
-}
 
 [deps]
 
-source_file="res://assets/prototype_maria_diffuse.png"
-dest_files=["res://.godot/imported/prototype_maria_diffuse.png-1c822916625113be47e09e9ea18b9131.s3tc.ctex", "res://.godot/imported/prototype_maria_diffuse.png-1c822916625113be47e09e9ea18b9131.etc2.ctex"]
+source_file="res://assets/textures/maria_diffuse.png"
+dest_files=["res://.godot/imported/maria_diffuse.png-e5d187d313aaacd741c993ba7132f7ef.s3tc.ctex", "res://.godot/imported/maria_diffuse.png-e5d187d313aaacd741c993ba7132f7ef.etc2.ctex"]
 
 [params]
 

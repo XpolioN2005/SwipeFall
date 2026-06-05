@@ -1,0 +1,15 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dh1q6jmv4g3ge"]
+
+[ext_resource type="Texture2D" uid="uid://co4ha2k7f42ln" path="res://assets/textures/maria_diffuse.png" id="1_c8t2q"]
+[ext_resource type="Texture2D" uid="uid://byibb3iix1f5d" path="res://assets/textures/maria_specular.png" id="2_75egx"]
+[ext_resource type="Texture2D" uid="uid://dahlb2yjuklbd" path="res://assets/textures/maria_normal.png" id="3_3ms3q"]
+
+[resource]
+resource_name = "MariaMat"
+cull_mode = 2
+albedo_texture = ExtResource("1_c8t2q")
+metallic = 1.0
+metallic_texture = ExtResource("2_75egx")
+roughness = 0.5527864
+normal_enabled = true
+normal_texture = ExtResource("3_3ms3q")

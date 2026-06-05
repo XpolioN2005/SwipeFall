@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bus462c6ybdxw" path="res://Utils/gesture_recognizer.gd" id="1_37kl0"]
 [ext_resource type="PackedScene" uid="uid://byque4w54oowj" path="res://Player/player_cam.tscn" id="2_8uh7m"]
+[ext_resource type="PackedScene" uid="uid://l5evyrdc7ecn" path="res://assets/prototype.glb" id="3_6uqi0"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_37kl0"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -29,3 +30,7 @@ script = ExtResource("1_37kl0")
 metadata/_custom_type_script = "uid://bus462c6ybdxw"
 
 [node name="Player" parent="." unique_id=310939546 instance=ExtResource("2_8uh7m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1036773, 0)
+
+[node name="prototype" parent="." unique_id=750181284 instance=ExtResource("3_6uqi0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.6598859)

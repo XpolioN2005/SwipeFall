@@ -2,21 +2,18 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b75stk17gk22v"
-path.s3tc="res://.godot/imported/prototype_maria_normal.png-be785e18ca1acca0bc5e4c26d0239b33.s3tc.ctex"
-path.etc2="res://.godot/imported/prototype_maria_normal.png-be785e18ca1acca0bc5e4c26d0239b33.etc2.ctex"
+uid="uid://dahlb2yjuklbd"
+path.s3tc="res://.godot/imported/maria_normal.png-0630bf0df75944fd0012bbe1f89f20fd.s3tc.ctex"
+path.etc2="res://.godot/imported/maria_normal.png-0630bf0df75944fd0012bbe1f89f20fd.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
-generator_parameters={
-"md5": "6677eef315fefd08259fdb3e2771dfcd"
-}
 
 [deps]
 
-source_file="res://assets/prototype_maria_normal.png"
-dest_files=["res://.godot/imported/prototype_maria_normal.png-be785e18ca1acca0bc5e4c26d0239b33.s3tc.ctex", "res://.godot/imported/prototype_maria_normal.png-be785e18ca1acca0bc5e4c26d0239b33.etc2.ctex"]
+source_file="res://assets/textures/maria_normal.png"
+dest_files=["res://.godot/imported/maria_normal.png-0630bf0df75944fd0012bbe1f89f20fd.s3tc.ctex", "res://.godot/imported/maria_normal.png-0630bf0df75944fd0012bbe1f89f20fd.etc2.ctex"]
 
 [params]
 
@@ -31,7 +28,7 @@ compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=1
-roughness/src_normal="res://assets/prototype_maria_normal.png"
+roughness/src_normal="res://assets/textures/maria_normal.png"
 process/channel_remap/red=0
 process/channel_remap/green=1
 process/channel_remap/blue=2
