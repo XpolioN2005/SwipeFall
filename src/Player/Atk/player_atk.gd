@@ -5,8 +5,11 @@ class_name PlayerAtk
 @export var area: Area2D
 
 @export var point_distance_threshold: float = 10.0
+@export var minimum_points_while_dragging: int = 2
+
 @export var lifetime: float = 1.0
 @export var decay_rate: float = 0.01
+@export var default_decay_delay: float = 0.5
 
 var is_slash: bool = false
 var finger_id: int
@@ -15,6 +18,7 @@ const MAX_POINTS: int = 200
 
 var drag_ended: bool = false
 var decay_running: bool = false
+var decay_delay: float = 0.0
 
 @onready var curve: Curve2D = Curve2D.new()
 
@@ -54,12 +58,6 @@ func _start_lifetime() -> void:
 		_decay()
 
 
-func _on_drag_ended(finger: int, _position: Vector2) -> void:
-	if finger_id != finger:
-		return
-	drag_ended = true
-
-
 func _on_dragging(finger: int, pos: Vector2, _delta: Vector2) -> void:
 	if finger_id != finger:
 		return
@@ -77,8 +75,11 @@ func _on_dragging(finger: int, pos: Vector2, _delta: Vector2) -> void:
 		if last_point.distance_to(local_pos) < point_distance_threshold:
 			return
 
+	# Delay decay so new points can accumulate.
+	if decay_running and curve.point_count < minimum_points_while_dragging:
+		decay_delay = default_decay_delay
+
 	curve.add_point(local_pos)
-	# print("added point")
 
 	_raycast(pos)
 
@@ -87,6 +88,10 @@ func _on_dragging(finger: int, pos: Vector2, _delta: Vector2) -> void:
 
 	_update_line()
 
+func _on_drag_ended(finger: int, _position: Vector2) -> void:
+	if finger_id != finger:
+		return
+	drag_ended = true
 
 func _update_line() -> void:
 	line.points = curve.get_baked_points()
@@ -96,6 +101,10 @@ func _decay() -> void:
 	decay_running = true
 
 	while true:
+		if decay_delay > 0.0:
+			await get_tree().create_timer(decay_delay).timeout
+			decay_delay = 0.0
+			
 		if curve.point_count > 0:
 			curve.remove_point(0)
 			_update_line()
